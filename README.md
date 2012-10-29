@@ -1,4 +1,4 @@
 #3D CAPTCHA
 A python module for generate 3D CPATCHA.
 
-![demo](http://ww2.sinaimg.cn/large/a74ecc4cjw1dycq988zf9j.jpg)
+![demo](https://raw.github.com/013231/3D-CAPTCHA/master/demo.png)

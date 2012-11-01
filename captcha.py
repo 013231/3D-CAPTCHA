@@ -1,21 +1,19 @@
 #!/usr/bin/env python 
 # encoding=utf-8
 
-from ConfigParser import SafeConfigParser
 from random import shuffle, randint
 import numpy, pylab
 from PIL import Image, ImageDraw, ImageFont
 from mpl_toolkits.mplot3d import Axes3D
 
-_parser = SafeConfigParser()
-_parser.read('config.ini')
-fontPath = _parser.get('font', 'path')
+fontPath = '/Library/Fonts/Arial.ttf'
 
 def makeImage(text, angle=randint(-20, 20)):
-    '''
-    Get a 3D CAPTCHA image.
-    '''
-    font = ImageFont.truetype(fontPath, 24)
+    try:
+        font = ImageFont.truetype(fontPath, 24)
+    except IOError:
+        raise IOError(
+            'Font file doesn\'t exist. Please set `fontPath` correctly.')
     txtW, txtH = font.getsize(text)
     img = Image.new('L', (txtW * 3, txtH * 3), 255)
     drw = ImageDraw.Draw(img)
@@ -34,10 +32,11 @@ def makeImage(text, angle=randint(-20, 20)):
     return fig
 
 if __name__ == '__main__':
+    #Hard to recognize characters have been removed from this list.
     characters = list('bcdghijkmnpqrtuvwxyz23456789')
     for i in range(-20, 21):
         shuffle(characters)
         word = ''.join(characters[:7])
         fig = makeImage(word, angle=i)
-        fig.savefig('%d.png' % i)
+        fig.savefig('%d.png' % (i + 20))
         print i

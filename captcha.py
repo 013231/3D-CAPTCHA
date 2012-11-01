@@ -1,14 +1,23 @@
 #!/usr/bin/env python 
 # encoding=utf-8
 
-from random import shuffle, randint
+import random
+import cStringIO
+import ImageFont, Image, ImageDraw
 import numpy, pylab
-from PIL import Image, ImageDraw, ImageFont
-from mpl_toolkits.mplot3d import Axes3D
+import mpl_toolkits.mplot3d
 
 fontPath = '/Library/Fonts/Arial.ttf'
 
-def makeImage(text, angle=randint(-20, 20)):
+def makeImage(text, angle=random.randint(-20, 20)):
+    '''Generate a 3d CAPTCHA image.
+    Args:
+        text: Text in the image.
+        angle: The angle between text and X axis.
+    Returns:
+        Binary data of CAPTCHA image.
+    '''
+    #XXx
     try:
         font = ImageFont.truetype(fontPath, 24)
     except IOError:
@@ -20,7 +29,7 @@ def makeImage(text, angle=randint(-20, 20)):
     drw.text((txtW, txtH), text, font=font)
 
     fig = pylab.figure(figsize=(4, 2))
-    ax = Axes3D(fig)
+    ax = mpl_toolkits.mplot3d.Axes3D(fig)
     X, Y = numpy.meshgrid(range(img.size[0]), range(img.size[1]))
     Z = 1 - numpy.asarray(img) / 255
     ax.plot_wireframe(X, -Y, Z, rstride=1, cstride=1)
@@ -29,14 +38,20 @@ def makeImage(text, angle=randint(-20, 20)):
     ax.set_ylim((-txtH * 1.9, -txtH * 1.1))
     ax.set_axis_off()
     ax.view_init(elev=60, azim=-90 + angle)
-    return fig
+
+    fim = cStringIO.StringIO()
+    fig.savefig(fim, format='png')
+    binData = fim.getvalue()
+    fim.close()
+    return binData
 
 if __name__ == '__main__':
     #Hard to recognize characters have been removed from this list.
     characters = list('bcdghijkmnpqrtuvwxyz23456789')
     for i in range(-20, 21):
-        shuffle(characters)
+        random.shuffle(characters)
         word = ''.join(characters[:7])
-        fig = makeImage(word, angle=i)
-        fig.savefig('%d.png' % (i + 20))
+        img = makeImage(word, angle=i)
+        with open('%d.png' % (i + 20), 'wb') as outFile:
+            outFile.write(img)
         print i

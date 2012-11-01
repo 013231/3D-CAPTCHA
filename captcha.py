@@ -15,7 +15,7 @@ def makeImage(text, angle=random.randint(-20, 20)):
         text: Text in the image.
         angle: The angle between text and X axis.
     Returns:
-        Binary data of CAPTCHA image.
+        Binary data of CAPTCHA image in PNG format.
     '''
     #XXx
     try:

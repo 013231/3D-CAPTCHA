@@ -45,13 +45,18 @@ def makeImage(text, angle=None):
     fim.close()
     return binData
 
-if __name__ == '__main__':
-    #Hard to recognize characters have been removed from this list.
+def randStr(length=7):
+    '''Generate a random string composed of lowercase and digital.
+    Indistinguishable characters have been removed.
+    '''
     characters = list('bcdghijkmnpqrtuvwxyz23456789')
+    shuffle(characters)
+    return ''.join(characters[:length])
+
+
+if __name__ == '__main__':
     for i in range(20):
-        shuffle(characters)
-        word = ''.join(characters[:7])
-        img = makeImage(word)
+        img = makeImage(randStr())
         with open('%d.png' % i, 'wb') as f:
             f.write(img)
         print i

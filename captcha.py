@@ -9,10 +9,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 fontPath = '/Library/Fonts/Arial.ttf'
 
-def makeImage(text, angle=None):
+def makeImage(text, width=400, height=200, angle=None):
     '''Generate a 3d CAPTCHA image.
     Args:
         text: Text in the image.
+        width: Image width in pixel.
+        height: Image height in pixel.
         angle: The angle between text and X axis.
     Returns:
         Binary data of CAPTCHA image in PNG format.
@@ -28,7 +30,7 @@ def makeImage(text, angle=None):
     drw = ImageDraw.Draw(img)
     drw.text((txtW, txtH), text, font=font)
 
-    fig = pylab.figure(figsize=(4, 2))
+    fig = pylab.figure(figsize=(width/100, height/100))
     ax = Axes3D(fig)
     X, Y = numpy.meshgrid(range(img.size[0]), range(img.size[1]))
     Z = 1 - numpy.asarray(img) / 255
@@ -56,7 +58,7 @@ def randStr(length=7):
 
 if __name__ == '__main__':
     for i in range(20):
-        img = makeImage(randStr())
+        img = makeImage(randStr(), width=512)
         with open('%d.png' % i, 'wb') as f:
             f.write(img)
         print i

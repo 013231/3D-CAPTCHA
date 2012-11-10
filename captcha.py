@@ -30,7 +30,7 @@ def makeImage(text, width=400, height=200, angle=None):
     drw = ImageDraw.Draw(img)
     drw.text((txtW, txtH), text, font=font)
 
-    fig = pylab.figure(figsize=(width/100, height/100))
+    fig = pylab.figure(figsize=(width/100.0, height/100.0))
     ax = Axes3D(fig)
     X, Y = numpy.meshgrid(range(img.size[0]), range(img.size[1]))
     Z = 1 - numpy.asarray(img) / 255
